@@ -1,19 +1,23 @@
-
 import React, { useState } from "react";
 import {
   BrowserRouter as Router,
-  Routes,
   Route,
-  Navigate,
+  Switch,
+  Redirect,
   Link,
 } from "react-router-dom";
 
 // PrivateRoute component
-const PrivateRoute = ({ isAuthenticated, children }) => {
-  return isAuthenticated ? children : <Navigate to="/login" />;
-};
+const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
+    }
+  />
+);
 
-// Login page component
+// Login page
 const Login = ({ onLogin, isAuthenticated }) => {
   const handleLogin = () => {
     onLogin(true);
@@ -31,15 +35,13 @@ const Login = ({ onLogin, isAuthenticated }) => {
   );
 };
 
-// Private page (Code Playground)
-const Home = () => {
-  return (
-    <div className="main-container">
-      <h2>Welcome to the Code Playground</h2>
-      <p>This is a private route accessible only to authenticated users.</p>
-    </div>
-  );
-};
+// Private Home page
+const Home = () => (
+  <div className="main-container">
+    <h2>Welcome to the Code Playground</h2>
+    <p>This is a private route accessible only to authenticated users.</p>
+  </div>
+);
 
 // App component
 const App = () => {
@@ -49,31 +51,24 @@ const App = () => {
     <Router>
       <div>
         <nav>
-          <Link to="/login">Login</Link> |{" "}
-          <Link to="/home">Code Playground</Link>
+          <Link to="/login">Login</Link> | <Link to="/home">Code Playground</Link>
           <p>Status: {isAuthenticated ? "Authenticated" : "Unauthenticated"}</p>
         </nav>
 
-        <Routes>
+        <Switch>
           <Route
             path="/login"
-            element={
-              <Login
-                onLogin={setIsAuthenticated}
-                isAuthenticated={isAuthenticated}
-              />
-            }
+            render={(props) => (
+              <Login {...props} onLogin={setIsAuthenticated} isAuthenticated={isAuthenticated} />
+            )}
           />
-          <Route
+          <PrivateRoute
             path="/home"
-            element={
-              <PrivateRoute isAuthenticated={isAuthenticated}>
-                <Home />
-              </PrivateRoute>
-            }
+            component={Home}
+            isAuthenticated={isAuthenticated}
           />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
+          <Redirect to="/login" />
+        </Switch>
       </div>
     </Router>
   );

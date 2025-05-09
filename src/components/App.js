@@ -7,7 +7,7 @@ import {
   Link,
 } from "react-router-dom";
 
-// PrivateRoute component
+// PrivateRoute for guarding private pages
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
   <Route
     {...rest}
@@ -17,7 +17,7 @@ const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
   />
 );
 
-// Login page
+// Login Page
 const Login = ({ onLogin, isAuthenticated }) => {
   const handleLogin = () => {
     onLogin(true);
@@ -25,7 +25,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
 
   return (
     <div className="main-container">
-      <h2>Login Page</h2>
+      <h2>You are not authenticated, Please login first</h2>
       {isAuthenticated ? (
         <p>You are already logged in.</p>
       ) : (
@@ -35,7 +35,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
   );
 };
 
-// Private Home page
+// Private Home Page
 const Home = () => (
   <div className="main-container">
     <h2>Welcome to the Code Playground</h2>
@@ -43,23 +43,31 @@ const Home = () => (
   </div>
 );
 
-// App component
+// Main App Component
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <Router>
       <div>
+        {/* Navigation with expected structure */}
         <nav>
-          <Link to="/login">Login</Link> | <Link to="/home">Code Playground</Link>
-          <p>Status: {isAuthenticated ? "Authenticated" : "Unauthenticated"}</p>
+          <Link to="/login">Login</Link>
+          <Link to="/home">Code Playground</Link>
         </nav>
+
+        {/* Auth status message (optional for debugging) */}
+        <p>Status: {isAuthenticated ? "Authenticated" : "Unauthenticated"}</p>
 
         <Switch>
           <Route
             path="/login"
             render={(props) => (
-              <Login {...props} onLogin={setIsAuthenticated} isAuthenticated={isAuthenticated} />
+              <Login
+                {...props}
+                onLogin={setIsAuthenticated}
+                isAuthenticated={isAuthenticated}
+              />
             )}
           />
           <PrivateRoute
@@ -75,4 +83,5 @@ const App = () => {
 };
 
 export default App;
+
 

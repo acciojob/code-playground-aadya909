@@ -7,7 +7,7 @@ import {
   Link,
 } from "react-router-dom";
 
-// PrivateRoute for guarding private pages
+// PrivateRoute component
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
   <Route
     {...rest}
@@ -17,7 +17,7 @@ const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
   />
 );
 
-// Login Page
+// Login page
 const Login = ({ onLogin, isAuthenticated }) => {
   const handleLogin = () => {
     onLogin(true);
@@ -35,7 +35,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
   );
 };
 
-// Private Home Page
+// Private Home page
 const Home = () => (
   <div className="main-container">
     <h2>Welcome to the Code Playground</h2>
@@ -43,20 +43,20 @@ const Home = () => (
   </div>
 );
 
-// Main App Component
+// Main App component
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <Router>
       <div>
-        {/* Navigation with expected structure */}
+        {/* ✅ Render nav conditionally */}
         <nav>
           <Link to="/login">Login</Link>
-          <Link to="/home">Code Playground</Link>
+          {isAuthenticated && <Link to="/home">Playground</Link>}
         </nav>
 
-        {/* Auth status message (optional for debugging) */}
+        {/* Optional auth status */}
         <p>Status: {isAuthenticated ? "Authenticated" : "Unauthenticated"}</p>
 
         <Switch>
@@ -83,5 +83,6 @@ const App = () => {
 };
 
 export default App;
+
 
 

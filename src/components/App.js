@@ -5,10 +5,9 @@ import {
   Switch,
   Redirect,
   Link,
-  useHistory,
 } from "react-router-dom";
 
-// PrivateRoute for access control
+// PrivateRoute component
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
   <Route
     {...rest}
@@ -18,7 +17,7 @@ const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
   />
 );
 
-// Login Page
+// Login page
 const Login = ({ onLogin, isAuthenticated }) => {
   const handleLogin = () => {
     onLogin(true);
@@ -36,7 +35,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
   );
 };
 
-// Home Page (Private)
+// Private Home page
 const Home = () => (
   <div className="main-container">
     <h2>Welcome to the Code Playground</h2>
@@ -44,20 +43,20 @@ const Home = () => (
   </div>
 );
 
-// App Component
+// Main App component
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <Router>
       <div>
-        {/* ✅ Always show 2 nav links in the same order */}
+        {/* ✅ Render nav conditionally */}
         <nav>
           <Link to="/login">Login</Link>
-          <Link to="/home">Playground</Link>
+          {isAuthenticated && <Link to="/home">Playground</Link>}
         </nav>
 
-        {/* Optional: Auth status */}
+        {/* Optional auth status */}
         <p>Status: {isAuthenticated ? "Authenticated" : "Unauthenticated"}</p>
 
         <Switch>
@@ -84,6 +83,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 
